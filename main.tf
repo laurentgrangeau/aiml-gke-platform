@@ -20,6 +20,19 @@ resource "google_container_cluster" "primary" {
       enabled = true
     }
   }
+
+  workload_identity_config {
+    workload_pool = "${data.google_project.project.project_id}.svc.id.goog"
+  }
+
+  # Needed to enable image streaming
+  node_pool_defaults {
+    node_config_defaults {
+      gcfs_config {
+        enabled = true
+      }
+    }
+  }
 }
 
 resource "google_container_node_pool" "primary_node_pool" {
@@ -106,12 +119,13 @@ resource "google_gke_hub_feature_membership" "name" {
     version = "1.17.1"
     config_sync {
       git {
-        sync_repo                 = "https://github.com/GoogleCloudPlatform/cloud-foundation-toolkit.git"
-        sync_branch               = "master"
-        policy_dir                = "config-management-samples/config-sync"
+        sync_repo                 = "https://github.com/laurentgrangeau/aiml-gke-platform.git"
+        sync_branch               = "main"
+        policy_dir                = "config-sync"
         secret_type               = "gcpserviceaccount"
         gcp_service_account_email = google_service_account.default.email
       }
+      source_format = "unstructured"
     }
   }
 }
