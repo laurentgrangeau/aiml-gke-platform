@@ -1,0 +1,5 @@
+helmCharts:
+  - name: kuberay-operator
+    repo: https://ray-project.github.io/kuberay-helm/
+    version: 1.0.0
+    releaseName: kuberay-operator
